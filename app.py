@@ -18,8 +18,8 @@ def create_embeddings():
     NetApp_path = "./NetApp_files"
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=2000,
-        chunk_overlap=200,
+        chunk_size=2500,
+        chunk_overlap=300,
         length_function=len,
         is_separator_regex=False,
     )
@@ -77,6 +77,7 @@ def ask_question(query,collection_name):
          - It may happen that the provided context may contain some information that is not retaled with the user questions. In this case you need to ignore the irrelevant contents and use only relevent content to give the final output to the user.
          - If user requested information is not present in the given context simply say 'No Answer' without any extra words or expalanation. Don't try to makeup the answer using your own knoeledge
          - Remeber you are not allowed to add any extra words apart from the final output. Don't say anything like 'Based on the provided context', Simply give your final answer with any addition of extra words.
+         - Remember to carefully analyze the complete context before giving the final output.
         Below is the context:
         """
         "\n\n"
