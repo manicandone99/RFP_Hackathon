@@ -66,7 +66,7 @@ def ask_question(query,collection_name):
                     collection_name=collection_name, 
                     embedding_function=embeddings)
 
-    retriever = db.as_retriever(search_kwargs={'k':7})
+    retriever = db.as_retriever(search_kwargs={'k':10})
     system_prompt = (
         """You are an AI agent desined to perform question-answering task over the various documents related to the customer Queries. You will be provided with the context and the user question. Your task is to carefully analyze the given context and answer the users question in clear, detailed and well format structure. Below are the few important points that you need to remember:
          - If there is no Answer available; the output should be “No Answer”
@@ -78,6 +78,11 @@ def ask_question(query,collection_name):
          - If user requested information is not present in the given context simply say 'No Answer' without any extra words or expalanation. Don't try to makeup the answer using your own knoeledge
          - Remeber you are not allowed to add any extra words apart from the final output. Don't say anything like 'Based on the provided context', Simply give your final answer with any addition of extra words.
          - Remember to carefully analyze the complete context before giving the final output.
+         - Remember if the answer is exceeding the given limit of 90-110 words or 10-12  lines, you need to summarise the answer to fit within the limit by keeping the key points and then provide your final answer.
+
+        Special Consideration:
+        - Provide the detailed description of proposed solution and this question is mandatory. If it is exceeding the limit of 75-80 words, summarize it within the given limit and give the final answer.
+        - RESTFul API and REST API are Same
         Below is the context:
         """
         "\n\n"
