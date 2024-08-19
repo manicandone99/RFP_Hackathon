@@ -4,6 +4,7 @@ from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 import os
+from langchain_openai.chat_models import ChatOpenAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
@@ -12,6 +13,9 @@ import streamlit as st
 import pandas as pd
 import io
 import time
+import openai
+
+
 
 def create_embeddings():
     Hitachi_path = "./hitachi_files"
@@ -49,7 +53,8 @@ def create_embeddings():
 
 
 def ask_question(query,collection_name):
-    llm = ChatGroq(temperature=0, groq_api_key="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", model_name="llama-3.1-70b-versatile")
+    # llm = ChatGroq(temperature=0, groq_api_key="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", model_name="mixtral-8x7b-32768")
+    llm = ChatOpenAI(model="gpt-3.5-turbo-0125",temperature=0)
 
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     if os.path.exists("./chroma"):
@@ -88,6 +93,17 @@ def ask_question(query,collection_name):
         "\n\n"
         "{context}"
     )
+    # system_prompt = (
+    #     """You are an AI agent desined to perform question-answering task over the various documents related to the customer Queries. You will be provided with the context and the user question. Your task is to carefully analyze the given context and answer the users question in clear, detailed and well format structure. You are having expertise in answering the questions within the range of 75-80 words or 7-8 lines. Below are the few important points that you need to remember:
+    #      - You first analyze all context given to you before answering any questions.
+    #      - If there is no answer available in the context for the given queries, simply say "No Answer" without any extra word as your final output. Don't try to makeup the answer using your own knowledge base.
+    #      - If Partial Answer is available; The output should include “Partial Answer Available”
+    #      - You are strictly not allowed to use your own knowledge base to answer any of the user questions
+    #     Below is the context:
+    #     """
+    #     "\n\n"
+    #     "{context}"
+    # )
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", system_prompt),
